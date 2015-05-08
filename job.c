@@ -43,7 +43,7 @@ void scheduler()
 	#endif
 	updateall();
 
-	#ifdef DEBUG
+	/*#ifdef DEBUG
 		struct waitqueue *p;
 		char timebuf[BUFLEN];
 		if (head != NULL)
@@ -60,7 +60,7 @@ void scheduler()
 				timebuf,
 				"READY");
 		}
-	#endif
+	#endif*/
 
 	switch(cmd.type){
 	case ENQ:
@@ -85,7 +85,7 @@ void scheduler()
 		break;
 	}
 
-	#ifdef DEBUG
+	/*#ifdef DEBUG
 		if (head != NULL)
 			printf("task7(after):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\tSTATE\n");
 		for(p=head;p!=NULL;p=p->next){
@@ -100,7 +100,7 @@ void scheduler()
 				timebuf,
 				"READY");
 		}
-	#endif
+	#endif*/
 
 	#ifdef DEBUG
 		printf("Select which job to run next!\n");
@@ -111,7 +111,70 @@ void scheduler()
 	#ifdef DEBUG
 		printf("Switch to the next job!\n");	
 	#endif
+	#ifdef DEBUG
+		struct waitqueue *p;
+		char timebuf[BUFLEN] = {'\0'};
+		if (current != NULL) {
+			printf("task9(before):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\n");
+		
+			strcpy(timebuf,ctime(&(current->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\n",
+				current->job->jid,
+				current->job->pid,
+				current->job->ownerid,
+				current->job->run_time,
+				current->job->wait_time,
+				timebuf);
+		}
+		timebuf[0] = '\0';
+		if (head != NULL)
+			printf("task9(before):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\tSTATE\n");
+		for(p=head;p!=NULL;p=p->next){
+			strcpy(timebuf,ctime(&(p->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\t%s\n",
+				p->job->jid,
+				p->job->pid,
+				p->job->ownerid,
+				p->job->run_time,
+				p->job->wait_time,
+				timebuf,
+				"READY");
+		}
+	#endif
 	jobswitch();
+	#ifdef DEBUG
+		if (current != NULL) {
+			timebuf[0] = '\0';
+			printf("task9(after):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\n");
+		
+			strcpy(timebuf,ctime(&(current->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\n",
+				current->job->jid,
+				current->job->pid,
+				current->job->ownerid,
+				current->job->run_time,
+				current->job->wait_time,
+				timebuf);
+		}
+		timebuf[0] = '\0';
+		if (head != NULL)
+			printf("task9(after):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\tSTATE\n");
+		for(p=head;p!=NULL;p=p->next){
+			strcpy(timebuf,ctime(&(p->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\t%s\n",
+				p->job->jid,
+				p->job->pid,
+				p->job->ownerid,
+				p->job->run_time,
+				p->job->wait_time,
+				timebuf,
+				"READY");
+		}
+	#endif
 }
 
 int allocjid()
@@ -177,6 +240,7 @@ struct waitqueue* jobselect()
 {
 	struct waitqueue *p,*prev,*select,*selectprev;
 	int highest = -1;
+	char timebuf[BUFLEN] = {'\0'};
 
 	select = NULL;
 	selectprev = NULL;
@@ -192,6 +256,23 @@ struct waitqueue* jobselect()
 			if (select == selectprev)
 				head = NULL;
 	}
+	/*#ifdef DEBUG
+		if (select != NULL) {
+			printf("task8:\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\n");
+		
+			strcpy(timebuf,ctime(&(select->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\n",
+				select->job->jid,
+				select->job->pid,
+				select->job->ownerid,
+				select->job->run_time,
+				select->job->wait_time,
+				timebuf);
+		} else {
+			printf("task8: selected job is null\n");
+		}
+	#endif*/
 	return select;
 }
 
