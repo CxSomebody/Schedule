@@ -85,6 +85,25 @@ int allocjid()
 void updateall()
 {
 	struct waitqueue *p;
+	#ifdef DEBUG
+		char timebuf[BUFLEN];
+		if (head != NULL)
+			printf("task6(before):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\tSTATE\n");
+		for(p=head;p!=NULL;p=p->next){
+			strcpy(timebuf,ctime(&(p->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\t%s\n",
+				p->job->jid,
+				p->job->pid,
+				p->job->ownerid,
+				p->job->run_time,
+				p->job->wait_time,
+				timebuf,
+				"READY");
+		}
+	#endif
+
+
 
 	/* 更新作业运行时间 */
 	if(current)
@@ -98,6 +117,23 @@ void updateall()
 			p->job->wait_time = 0;
 		}
 	}
+
+	#ifdef DEBUG
+		if (head != NULL)
+			printf("task6(after):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\tSTATE\n");
+		for(p=head;p!=NULL;p=p->next){
+			strcpy(timebuf,ctime(&(p->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\t%s\n",
+				p->job->jid,
+				p->job->pid,
+				p->job->ownerid,
+				p->job->run_time,
+				p->job->wait_time,
+				timebuf,
+				"READY");
+		}
+	#endif
 }
 
 struct waitqueue* jobselect()
