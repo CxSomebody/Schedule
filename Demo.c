@@ -7,6 +7,7 @@ void main()
   int count=1;  
   struct tm *timeinfo;
   time(&timer);//系统开始的时间
+  int i = 0;
   while(1)
   {
      time(&timerc);
@@ -14,6 +15,9 @@ void main()
      {
        printf("程序经过%d秒\n",count++);
        timer=timerc;
+       i++;
+       if (i > 8)
+          break;
      }
   }
   

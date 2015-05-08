@@ -111,7 +111,7 @@ void scheduler()
 	#ifdef DEBUG
 		printf("Switch to the next job!\n");	
 	#endif
-	#ifdef DEBUG
+	/*#ifdef DEBUG
 		struct waitqueue *p;
 		char timebuf[BUFLEN] = {'\0'};
 		if (current != NULL) {
@@ -142,9 +142,9 @@ void scheduler()
 				timebuf,
 				"READY");
 		}
-	#endif
+	#endif*/
 	jobswitch();
-	#ifdef DEBUG
+	/*#ifdef DEBUG
 		if (current != NULL) {
 			timebuf[0] = '\0';
 			printf("task9(after):\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\n");
@@ -174,7 +174,7 @@ void scheduler()
 				timebuf,
 				"READY");
 		}
-	#endif
+	#endif*/
 }
 
 int allocjid()
@@ -337,7 +337,7 @@ void sig_handler(int sig,siginfo_t *info,void *notused)
 {
 	int status;
 	int ret;
-
+	struct waitqueue *p;
 	switch (sig) {
 case SIGVTALRM: /* 到达计时器所设置的计时间隔 */
 	scheduler();
@@ -357,6 +357,25 @@ case SIGCHLD: /* 子进程结束时传送给父进程的信号 */
 	}else if (WIFSTOPPED(status)){
 		printf("child stopped, signal number = %d\n",WSTOPSIG(status));
 	}
+	#ifdef DEBUG
+
+		
+		char timebuf[BUFLEN];
+		if (head != NULL)
+			printf("task10:\nJOBID\tPID\tOWNER\tRUNTIME\tWAITTIME\tCREATTIME\t\tSTATE\n");
+		for(p=head;p!=NULL;p=p->next){
+			strcpy(timebuf,ctime(&(p->job->create_time)));
+			timebuf[strlen(timebuf)-1]='\0';
+			printf("%d\t%d\t%d\t%d\t%d\t%s\t%s\n",
+				p->job->jid,
+				p->job->pid,
+				p->job->ownerid,
+				p->job->run_time,
+				p->job->wait_time,
+				timebuf,
+				"READY");
+		}
+	#endif
 	return;
 	default:
 		return;
